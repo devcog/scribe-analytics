@@ -34,6 +34,7 @@ Scribe Analytics tracks virtually every user interaction possible.
    redirect may not be captured.
  * **Reloads** &mdash; All page reloads are captured. A reload occurs whenever
    the page is refreshed, either by the user or programmatically.
+ * **Pastes** &mdash; Tracks the text pasted in.
 
 Scribe Analytics will capture clicks on links and form interaction even when
 those links and forms are added dynamically via JavaScript. This is extremely
@@ -57,7 +58,8 @@ important in modern websites because so much content is inserted dynamically.
       trackEngagement:  true,
       trackLinkClicks:  true,
       trackRedirects:   true,
-      trackSubmissions: true
+      trackSubmissions: true,
+      trackPaste:       true
     });
     ```
  3. That's all! If your website supports login, you should also use the
