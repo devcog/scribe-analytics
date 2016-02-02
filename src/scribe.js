@@ -1054,7 +1054,8 @@ if (typeof Scribe === 'undefined') {
         trackEngagement:  false,
         trackLinkClicks:  false,
         trackRedirects:   false,
-        trackSubmissions: false
+        trackSubmissions: false,
+        trackPaste:       false
       }, this.options);
 
       // Always assume that Javascript is the culprit of leaving the page
@@ -1232,6 +1233,23 @@ if (typeof Scribe === 'undefined') {
               form: Util.merge({formId: e.form.formId}, DomUtil.getFormData(e.form))
             });
           }
+        });
+      }
+
+      //track user paste action
+      if(this.options.trackPaste) {
+        Events.onready(function() {
+          // Track all pastes to the document:
+          Events.onevent(document.body, 'paste', true, function(e) {
+            var obj = {};
+            if(window.clipboardData && window.clipboardData.getDate) { 
+              obj.pasteValue = window.clipboardData.getData('text');
+            }
+            else  {
+              obj.pasteValue = e.clipboardData.getData('text/plain');
+            }
+            self.track('paste', obj);
+          });
         });
       }
       // Track form abandonments:
