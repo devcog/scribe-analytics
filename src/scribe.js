@@ -1055,7 +1055,8 @@ if (typeof Scribe === 'undefined') {
         trackLinkClicks:  false,
         trackRedirects:   false,
         trackSubmissions: false,
-        trackPaste:       false
+        trackPaste:       false,
+        trackPageTitle:   false
       }, this.options);
 
       // Always assume that Javascript is the culprit of leaving the page
@@ -1250,6 +1251,17 @@ if (typeof Scribe === 'undefined') {
             }
             self.track('paste', obj);
           });
+        });
+      }
+
+      if(this.options.trackPageTitle) {
+        Events.onready(function() {
+          var obj = {};
+          var title = document.querySelector('title');
+          if(title) {
+            obj.titleValue = title.textContent;
+            self.track('page title', obj);
+          }
         });
       }
       // Track form abandonments:
