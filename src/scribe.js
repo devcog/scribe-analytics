@@ -1241,7 +1241,7 @@ if (typeof Scribe === 'undefined') {
         Events.onready(function() {
           // Track all pastes to the document:
           Events.onevent(document.body, 'paste', true, function(e) {
-            var obj = {};
+            var obj = {target: DomUtil.getNodeDescriptor(e.target)};
             if(window.clipboardData && window.clipboardData.getDate) { 
               obj.pasteValue = window.clipboardData.getData('text');
             }
