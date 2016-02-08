@@ -6,6 +6,7 @@
     <script src="../libs/nodeunit/nodeunit.js"></script>
     <script src="../dist/scribe-analytics.js"></script>
     <script src="../integrations/console/scribe-console.js"></script>
+    <script src="../integrations/ajax/scribe-ajax.js"></script>
     <script src="../integrations/precog/scribe-precog.js"></script>
     <script src="test-api.js"></script>
     <script type="text/javascript">
@@ -61,8 +62,22 @@
             document.body.appendChild(div);
           }
         });*/
+        // new Scribe({
+        //   tracker:          new ScribeConsoleTracker(),
+        //   trackPageViews:   true,
+        //   trackClicks:      true,
+        //   trackHashChanges: true,
+        //   trackEngagement:  true,
+        //   trackLinkClicks:  true,
+        //   trackRedirects:   true,
+        //   trackSubmissions: true,
+        //   trackPaste:       true,
+        //   trackPageTitle:   true
+        // });
         new Scribe({
-          tracker:          new ScribeConsoleTracker(),
+          tracker:          new ScribeAjaxTracker({
+              rootPath: 'http://localhost:3000'
+          }),
           trackPageViews:   true,
           trackClicks:      true,
           trackHashChanges: true,
