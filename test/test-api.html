@@ -6,7 +6,7 @@
     <script src="../libs/nodeunit/nodeunit.js"></script>
     <script src="../dist/scribe-analytics.js"></script>
     <script src="../integrations/console/scribe-console.js"></script>
-    <script src="../integrations/ajax/scribe-ajax.js"></script>
+    <script src="../integrations/jsonp/scribe-jsonp.js"></script>
     <script src="../integrations/precog/scribe-precog.js"></script>
     <script src="test-api.js"></script>
     <script type="text/javascript">
@@ -75,7 +75,7 @@
         //   trackPageTitle:   true
         // });
         new Scribe({
-          tracker:          new ScribeAjaxTracker({
+          tracker:          new ScribeJsonpTracker({
               rootPath: 'http://localhost:3000'
           }),
           trackPageViews:   true,
