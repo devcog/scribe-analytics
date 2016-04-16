@@ -1020,6 +1020,7 @@ if (typeof Scribe === 'undefined') {
           }
         });
 
+
         // Intercept clicks on any buttons:
         Events.onevent(document.body, 'click', false, function(e) {
           var target = e.target;
@@ -1052,6 +1053,8 @@ if (typeof Scribe === 'undefined') {
         resolveGeo:       false,
         trackPageViews:   false,
         trackClicks:      false,
+        trackBlurs:       false,
+        trackChanges:     false,
         trackHashChanges: false,
         trackEngagement:  false,
         trackLinkClicks:  false,
@@ -1143,6 +1146,30 @@ if (typeof Scribe === 'undefined') {
                 target: DomUtil.getNodeDescriptor(e.target)
               });
             }
+          });
+        });
+      }
+
+      // Track clicks
+      if(this.options.trackBlurs) {
+        Events.onready(function() {
+          // Track all clicks to the document:
+          Events.onevent(document.body, 'blur', true, function(e) {
+            self.track('blur', {
+              target: DomUtil.getNodeDescriptor(e.target)
+            });
+          });
+        });
+      }
+
+      // Track input/textarea changes
+      if(this.options.trackChanges) {
+        Events.onready(function() {
+          // Track all clicks to the document:
+          Events.onevent(document.body, 'change', true, function(e) {
+            self.track('change', {
+              target: DomUtil.getNodeDescriptor(e.target)
+            });
           });
         });
       }
