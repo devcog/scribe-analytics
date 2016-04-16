@@ -1153,7 +1153,7 @@ if (typeof Scribe === 'undefined') {
       // Track clicks
       if(this.options.trackBlurs) {
         Events.onready(function() {
-          // Track all clicks to the document:
+          // Track all blurs on the document:
           Events.onevent(document.body, 'blur', true, function(e) {
             self.track('blur', {
               target: DomUtil.getNodeDescriptor(e.target)
@@ -1165,7 +1165,7 @@ if (typeof Scribe === 'undefined') {
       // Track input/textarea changes
       if(this.options.trackChanges) {
         Events.onready(function() {
-          // Track all clicks to the document:
+          // Track all changes on the document:
           Events.onevent(document.body, 'change', true, function(e) {
             self.track('change', {
               target: DomUtil.getNodeDescriptor(e.target)
