@@ -1051,9 +1051,9 @@ if (typeof Scribe === 'undefined') {
         breakoutVisitors: false,
         waitOnTracker:    false,
         resolveGeo:       false,
-        excludeFields:     [],
+        excludeFields:    [],
         excludeValuesPattern: null,
-
+        captureFields:    [],
         trackPageViews:   false,
         trackClicks:      false,
         trackBlurs:       false,
@@ -1073,6 +1073,10 @@ if (typeof Scribe === 'undefined') {
 
       if (!(this.options.excludeValuesPattern instanceof RegExp)) {
         this.options.excludeValuesPattern = null;
+      }
+
+      if (typeof this.options.captureFields !== typeof []) {
+        this.options.captureFields = [];
       }
 
       // Always assume that Javascript is the culprit of leaving the page
@@ -1141,6 +1145,14 @@ if (typeof Scribe === 'undefined') {
         Events.onready(function() {
           // Track page view, but only after the DOM has loaded:
           self.pageview();
+        });
+      }
+
+      // Capture fields
+      if(this.options.captureFields.length) {
+        Events.onready(function() {
+          // Capture fields, but only after the DOM has loaded:
+          self.captureFields();
         });
       }
 
@@ -1537,6 +1549,26 @@ if (typeof Scribe === 'undefined') {
       url = url || document.location;
 
       this.track('pageview', Util.merge(Env.getPageloadData(), {url: Util.parseUrl(url + '')}), success, failure);
+    };
+
+    /**
+     * Capture fields.
+     *
+     */
+    Scribe.prototype.captureFields = function(success, failure) {
+      var dataCaptured = {};
+      for (var i=0; i<this.options.captureFields.length; i++) {
+        var id = this.options.captureFields[i];
+        var data = document.getElementById(id);
+        if(data && data.value) {
+          dataCaptured[id] = data.value;
+        } else {
+          dataCaptured[id] = '';
+        }
+      }
+      this.track('data_capture', {
+        data_captured: dataCaptured
+      });
     };
 
     return Scribe;
