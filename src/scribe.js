@@ -596,8 +596,10 @@ if (typeof Scribe === 'undefined') {
     DomUtil.getNodeDescriptor = function(node) {
       return {
         id:         node.id,
-        selector:   DomUtil.genCssSelector(node),
-        title:      node.title === '' ? undefined : node.title,
+        // selector:   DomUtil.genCssSelector(node),
+        name:       node.name,
+        value:      node.value,
+        title:      node.title,
         data:       DomUtil.getDataset(node)
       };
     };
@@ -1243,7 +1245,7 @@ if (typeof Scribe === 'undefined') {
           // Track all pastes to the document:
           Events.onevent(document.body, 'paste', true, function(e) {
             var obj = {target: DomUtil.getNodeDescriptor(e.target)};
-            if(window.clipboardData && window.clipboardData.getDate) { 
+            if(window.clipboardData && window.clipboardData.getDate) {
               obj.pasteValue = window.clipboardData.getData('text');
             }
             else  {
