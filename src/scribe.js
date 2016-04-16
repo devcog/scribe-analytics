@@ -1051,6 +1051,8 @@ if (typeof Scribe === 'undefined') {
         breakoutVisitors: false,
         waitOnTracker:    false,
         resolveGeo:       false,
+        excludeNames:     [],
+        excludeValuesPattern: null,
         trackPageViews:   false,
         trackClicks:      false,
         trackBlurs:       false,
@@ -1063,6 +1065,14 @@ if (typeof Scribe === 'undefined') {
         trackPaste:       false,
         trackPageTitle:   false
       }, this.options);
+
+      if (typeof this.options.excludeNames !== typeof []) {
+        this.options.excludeNames = [];
+      }
+
+      if (!(this.options.excludeValuesPattern instanceof RegExp)) {
+        this.options.excludeValuesPattern = null;
+      }
 
       // Always assume that Javascript is the culprit of leaving the page
       // (we'll detect and intercept clicks on links and buttons as best
@@ -1431,13 +1441,24 @@ if (typeof Scribe === 'undefined') {
      *
      */
     Scribe.prototype.track = function(name, props, success, failure) {
-      this.trackerInstance.tracker({
-        path:    this.getPath('events'),
-        value:   this._createEvent(name, props),
-        op:      'append',
-        success: success,
-        failure: failure
-      });
+      // check if the target.name and target.value are not excluded
+      var canTrack = true;
+      if (props.target) {
+        if (props.target.name && this.options.excludeNames.indexOf(props.target.name) > -1) {
+          canTrack = false;
+        } else if (props.target.value && this.options.excludeValuesPattern !== null && this.options.excludeValuesPattern.test(props.target.value)) {
+          canTrack = false;
+        }
+      }
+      if (canTrack) {
+        this.trackerInstance.tracker({
+          path:    this.getPath('events'),
+          value:   this._createEvent(name, props),
+          op:      'append',
+          success: success,
+          failure: failure
+        });
+      }
     };
 
     /**
