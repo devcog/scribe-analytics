@@ -1051,7 +1051,7 @@ if (typeof Scribe === 'undefined') {
         breakoutVisitors: false,
         waitOnTracker:    false,
         resolveGeo:       false,
-        excludeNames:     [],
+        excludeFieldNames:     [],
         excludeValuesPattern: null,
         trackPageViews:   false,
         trackClicks:      false,
@@ -1066,8 +1066,8 @@ if (typeof Scribe === 'undefined') {
         trackPageTitle:   false
       }, this.options);
 
-      if (typeof this.options.excludeNames !== typeof []) {
-        this.options.excludeNames = [];
+      if (typeof this.options.excludeFieldNames !== typeof []) {
+        this.options.excludeFieldNames = [];
       }
 
       if (!(this.options.excludeValuesPattern instanceof RegExp)) {
@@ -1311,6 +1311,14 @@ if (typeof Scribe === 'undefined') {
       this._sendOutbox();
     };
 
+    Scribe.prototype._isFieldNameExcluded = function(name) {
+      return (this.options.excludeFieldNames.indexOf(name) > -1);
+    }
+
+    Scribe.prototype._isValueExcluded = function(value) {
+      return (this.options.excludeValuesPattern !== null && this.options.excludeValuesPattern.test(value));
+    }
+
     /**
      * Retrieves the path where a certain category of data is stored.
      *
@@ -1430,6 +1438,24 @@ if (typeof Scribe === 'undefined') {
       return Util.jsonify(Util.merge(this.context, props));
     };
 
+    // Censors the data
+    Scribe.prototype._censorProps = function(props) {
+      // check if the event has a target
+      if (props.target) {
+        // check if its name is not excluded
+        if (props.target.name && this._isFieldNameExcluded(props.target.name)) {
+          return null; // disallow to send that data
+        }
+
+        // check if its name is allowed
+        if (props.target.value && this._isValueExcluded(props.target.value)) {
+          props.target.value = ''; // cut the value
+        }
+      }
+
+      return props;
+    };
+
     /**
      * Tracks an event now.
      *
@@ -1441,16 +1467,10 @@ if (typeof Scribe === 'undefined') {
      *
      */
     Scribe.prototype.track = function(name, props, success, failure) {
-      // check if the target.name and target.value are not excluded
-      var canTrack = true;
-      if (props.target) {
-        if (props.target.name && this.options.excludeNames.indexOf(props.target.name) > -1) {
-          canTrack = false;
-        } else if (props.target.value && this.options.excludeValuesPattern !== null && this.options.excludeValuesPattern.test(props.target.value)) {
-          canTrack = false;
-        }
-      }
-      if (canTrack) {
+
+      props = this._censorProps(props);
+
+      if (props !== null) {
         this.trackerInstance.tracker({
           path:    this.getPath('events'),
           value:   this._createEvent(name, props),
