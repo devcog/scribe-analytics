@@ -1,8 +1,8 @@
 var gulp = require('gulp'),
-  gzip = require('gulp-gzip'),
-  jsdoc = require('gulp-jsdoc'),
+  // gzip = require('gulp-gzip'),
+  // jsdoc = require('gulp-jsdoc'),
   // jshint = require('gulp-jshint'),
-  nodeunit = require('gulp-nodeunit'),
+  // nodeunit = require('gulp-nodeunit'),
   rig = require('gulp-rigger'),
   uglify = require('gulp-uglify');
 
