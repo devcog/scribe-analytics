@@ -1446,7 +1446,10 @@ if (typeof Scribe === 'undefined') {
 
       props.timestamp = props.timestamp || (new Date()).toISOString();
       props.event     = name;
-      props.source    = Util.merge({url: Util.parseUrl(document.location)}, props.source || {});
+      props.source    = Util.merge({
+        referrer: Util.parseUrl(document.referrer),
+        url: Util.parseUrl(document.location)
+      }, props.source || {});
 
       return Util.jsonify(Util.merge(this.context, props));
     };
