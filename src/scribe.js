@@ -1051,8 +1051,9 @@ if (typeof Scribe === 'undefined') {
         breakoutVisitors: false,
         waitOnTracker:    false,
         resolveGeo:       false,
-        excludeFieldNames:     [],
+        excludeFields:     [],
         excludeValuesPattern: null,
+
         trackPageViews:   false,
         trackClicks:      false,
         trackBlurs:       false,
@@ -1066,8 +1067,8 @@ if (typeof Scribe === 'undefined') {
         trackPageTitle:   false
       }, this.options);
 
-      if (typeof this.options.excludeFieldNames !== typeof []) {
-        this.options.excludeFieldNames = [];
+      if (typeof this.options.excludeFields !== typeof []) {
+        this.options.excludeFields = [];
       }
 
       if (!(this.options.excludeValuesPattern instanceof RegExp)) {
@@ -1312,7 +1313,7 @@ if (typeof Scribe === 'undefined') {
     };
 
     Scribe.prototype._isFieldNameExcluded = function(name) {
-      return (this.options.excludeFieldNames.indexOf(name) > -1);
+      return (this.options.excludeFields.indexOf(name) > -1);
     }
 
     Scribe.prototype._isValueExcluded = function(value) {
