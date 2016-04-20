@@ -1560,18 +1560,22 @@ if (typeof Scribe === 'undefined') {
      */
     Scribe.prototype.captureFields = function(success, failure) {
       var dataCaptured = {};
+      var numFields = 0;
       for (var i=0; i<this.options.captureFields.length; i++) {
         var id = this.options.captureFields[i];
         var data = document.getElementById(id);
         if(data && data.value) {
           dataCaptured[id] = data.value;
+          numFields++;
         } else {
           dataCaptured[id] = '';
         }
       }
-      this.track('data_capture', {
-        data_captured: dataCaptured
-      });
+      if (numFields > 0) {
+        this.track('data_capture', {
+          data_captured: dataCaptured
+        });
+      }
     };
 
     return Scribe;
